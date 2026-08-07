@@ -915,7 +915,7 @@ ${stateSummaryForAI(state)}`;
       const reply = await askClaude(next.map((m) => ({ role: m.role, content: m.content })), system);
       setHistory([...next, { role: "assistant", content: reply || "Sorry, I didn't catch that." }]);
     } catch (e) {
-      setError(geminiConfigured() ? "The assistant isn't reachable right now. Please try again in a moment." : "The assistant isn't set up yet \u2014 a caregiver needs to add a Gemini API key to this device.");
+      setError(geminiConfigured() ? `Assistant error: ${e && e.message ? e.message : "unknown failure"}` : "The assistant isn't set up yet \u2014 a caregiver needs to add a Gemini API key to this device.");
     } finally {
       setLoading(false);
     }
@@ -963,7 +963,7 @@ function ScanModal({ state, persist, showToast, onClose }) {
       const nextEmpty = state.slots.find((s) => !s.name);
       setTargetSlot(nextEmpty ? nextEmpty.id : state.slots[0].id);
     } catch (e) {
-      setError("Couldn't read that photo automatically. You can still fill the slot in manually.");
+      setError(`Couldn't read that photo automatically (${e && e.message ? e.message : "unknown failure"}). You can still fill the slot in manually.`);
     } finally {
       setLoading(false);
     }
